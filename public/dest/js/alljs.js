@@ -1,0 +1,1 @@
+angular.module("chatApp",["ngRoute","ngMaterial"]),angular.module("chatApp").config(["$routeProvider",function(l){l.when("/",{templateUrl:"./html/views/home.html",controller:"mainController as main"})}]),angular.module("chatApp").controller("mainController",["$http",function(l){io()}]);

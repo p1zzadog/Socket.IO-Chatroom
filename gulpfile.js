@@ -12,14 +12,14 @@ gulp.task('build-js', function(){
 	gulp.src('./public/js/**/*.js')
 		.pipe(concat('alljs.js'))
 		.pipe(makeItUgly())
-		.pipe(gulp.dest('./public/dest/js'));
+		.pipe(gulp.dest('./public/dest/js'))
 });
 
 gulp.task('build-css', function(){
 	gulp.src('./public/css/**/*.css')
-	.pipe(concat('allcss.css'))
-	.pipe(min())
-	.pipe(gulp.dest('./public/dest/css'));
+		.pipe(concat('allcss.css'))
+		.pipe(min())
+		.pipe(gulp.dest('./public/dest/css'))
 });
 
 gulp.task('ticktock', function(){

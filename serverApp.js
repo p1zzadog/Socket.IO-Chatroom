@@ -4,8 +4,26 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/routes.js');
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')
-var session = require('express-session')
+var io = require('socket.io');
+var session = require('express-session');
+var passport = require('passport');
+
+var passportConfig = require('./auth/config/passport.js')
+
+// connect db
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/socketChat');
+
+// app config
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static(__dirname + '/public'));
+
+app.use('/', routes)
+app.post('/auth/login', function(req, res){
+	console.log(req.body)
+	res.send('Okay!');
+})
 
 // setup Session
 app.sessionMiddleware = session({
@@ -14,15 +32,6 @@ app.sessionMiddleware = session({
   saveUninitialized: true,
 });
 app.use(app.sessionMiddleware);
-
-// app config
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static(__dirname + '/public'));
-
-app.use('/', routes)
-
-
 
 // server
 var port = 3000;

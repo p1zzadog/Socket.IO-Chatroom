@@ -1,0 +1,16 @@
+<h1>Login Required</h1>
+
+<h2>Login</h2>
+<form ng-submit="loginCtrl.login()">
+    <input ng-model="loginCtrl.loginForm.username" placeholder="username" type="text"/>
+    <input ng-model="loginCtrl.loginForm.password" placeholder="password" type="password"/>
+    <input type="submit"/>
+</form>
+<hr/>
+<h2>New User Register</h2>
+<form ng-submit="loginCtrl.signup()">
+    <input ng-model="loginCtrl.signupForm.username" placeholder="new username" type="text"/>
+    <input ng-model="loginCtrl.signupForm.password" placeholder="new password" type="password"/>
+    <input ng-model="loginCtrl.signupForm.email" placeholder="new email" type="email"/>
+    <input type="submit"/>
+</form>

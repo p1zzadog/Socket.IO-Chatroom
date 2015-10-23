@@ -1,5 +1,5 @@
 /*default styling from Socket.IO example*/
-* { 
+/** { 
 	margin: 0; 
 	padding: 0; 
 	box-sizing: border-box; 
@@ -35,4 +35,4 @@ form button {
 }
 #messages li:nth-child(odd) { 
 	background: #eee; 
-}
+}*/

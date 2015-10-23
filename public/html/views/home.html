@@ -1,5 +1,12 @@
 <h2>Socket.IO Chatroom!</h2>
-<ul id="messages"></ul>
-<form action="">
-	<input id="m" autocomplete="off"/><button>Send</button>
+<md-content>
+	<div layout>
+		<ul>
+			<li ng-repeat="message in mainCtrl.allMessages" ng-bind="message"></li>
+		</ul>
+	</div layout>
+</md-content>
+<form ng-submit="mainCtrl.send()">
+	<input ng-model="mainCtrl.message" autocomplete="off" placeholder="message"/>
+	<md-button type="submit" class="md-raised md-primary">Send</md-button>
 </form>

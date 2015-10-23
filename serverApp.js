@@ -45,8 +45,15 @@ socketServer.use(function(socket, next){
 	app.sessionMiddleware(socket.request, {}, next);
 });
 
+var connectedUsers = {};
+
 socketServer.on('connection', function(socket){
 	console.log('a user connected');
+
+	socket.on('chat message', function(message){
+		console.log(message);
+		socket.emit('chat message', message);
+	})
 
 
 	socket.on('disconnect', function(){

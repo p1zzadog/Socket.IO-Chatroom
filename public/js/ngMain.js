@@ -17,8 +17,22 @@ angular.module('chatApp')
 
 // mainController
 angular.module('chatApp')
-	.controller('mainController', ['$http', function($http){
+	.controller('mainController', ['$scope','$http', function($scope, $http){
 		var socket = io();
+		
+		var mainCtrl = this;
+
+		mainCtrl.allMessages = [];
+
+		mainCtrl.send = function(){
+			socket.emit('chat message', mainCtrl.message);
+			mainCtrl.message = '';
+			return false;
+		}
+		socket.on('chat message', function(message){
+			mainCtrl.allMessages.push(message);
+			$scope.$apply()
+		})
 		
 	}]);
 
@@ -37,7 +51,11 @@ angular.module('chatApp')
 			}).then(function(returnData){
 				console.log(returnData.data);
 			});
+
+			return false;
 		};
+
+
 
 		
 	}]);

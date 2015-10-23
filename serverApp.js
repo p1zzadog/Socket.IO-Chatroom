@@ -26,6 +26,7 @@ app.post('/auth/login', function(req, res){
 })
 
 // setup Session
+// name session for reuse in socket server config
 app.sessionMiddleware = session({
   secret: 'keyboard cat',
   resave: false,
@@ -35,24 +36,35 @@ app.use(app.sessionMiddleware);
 
 // server
 var port = 3000;
+// app.listen returns http server object
 app.server = app.listen(port, function(){
 	console.log('server is listening on port ' + port);
 });
 
+//set up socketServer, use http server object as argument 
 var socketServer = io(app.server);
 
+// analogous to app.use(session({}))
 socketServer.use(function(socket, next){
 	app.sessionMiddleware(socket.request, {}, next);
 });
 
+// connected users object
 var connectedUsers = {};
+var allMessages = [];
 
+// "socket" is a 1:1 server:client connection
+// "socketServer" is server:allClients
+// socketServer event handling
+// analogous to routing
 socketServer.on('connection', function(socket){
 	console.log('a user connected');
+	socket.emit('server-send', allMessages);
 
-	socket.on('chat message', function(message){
+	socket.on('client-send', function(message){
 		console.log(message);
-		socket.emit('chat message', message);
+		allMessages.push(message);
+		socketServer.emit('server-send', allMessages);
 	})
 
 

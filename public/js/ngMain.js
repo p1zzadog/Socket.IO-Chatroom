@@ -22,16 +22,24 @@ angular.module('chatApp')
 		
 		var mainCtrl = this;
 
-		mainCtrl.allMessages = [];
+		mainCtrl.allMessages;
+
+		socket.on('connect', function(returnMessages){
+			mainCtrl.allMessages = returnMessages;
+			$scope.$apply();
+		})
 
 		mainCtrl.send = function(){
-			socket.emit('chat message', mainCtrl.message);
+			socket.emit('client-send', mainCtrl.message);
 			mainCtrl.message = '';
-			return false;
 		}
-		socket.on('chat message', function(message){
-			mainCtrl.allMessages.push(message);
-			$scope.$apply()
+
+		socket.on('server-send', function(returnMessages){
+			console.log('message was received');
+			$scope.$apply(function(){
+				mainCtrl.allMessages = returnMessages;
+
+			});
 		})
 		
 	}]);

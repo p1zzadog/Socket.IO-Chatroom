@@ -22,34 +22,39 @@ angular.module('chatApp')
 
 // mainController
 angular.module('chatApp')
-	.controller('mainController', ['$scope','$http', function($scope, $http){
-		var socket = io();
-		
+	.controller('mainController', ['$scope','$http', '$location', '$anchorScroll', function($scope, $http, $location, $anchorScroll){
+		var socket = io();		
 		var mainCtrl = this;
+		mainCtrl.allMessages = [];
 
-		mainCtrl.allMessages;
+		// utility functions
+		var scrollChatBottom = function(messageArray) {
+			var elem = document.getElementById('chat-window');
+  			elem.scrollTop = elem.scrollHeight;
+		}
 
+		// initial socket connection
 		socket.on('connect', function(returnMessages){
 			mainCtrl.allMessages = returnMessages;
 			$scope.$apply();
+			scrollChatBottom();	
 		})
 
+		// send message
 		mainCtrl.send = function(){
 			socket.emit('client-send', mainCtrl.message);
 			mainCtrl.message = '';
-			var chatScroll = document.getElementById("chat-window");
-			chatScroll.scrollTop = chatScroll.scrollHeight;
 		}
 
+		// receive message
 		socket.on('server-send', function(returnMessages){
 			console.log('message was received');
 			$scope.$apply(function(){
 				mainCtrl.allMessages = returnMessages;
 				console.log(mainCtrl.allMessages);
-
 			});
-		})
-		
+			scrollChatBottom();		
+		});		
 	}]);
 
 // loginController

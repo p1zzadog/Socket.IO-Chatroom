@@ -1,9 +1,10 @@
 <h2>Socket.IO Chatroom!</h2>
 
-	<md-content style="height:350px;" id="chat-window">
-		<md-list>
+<div style="height:350px; overflow:auto;" id="chat-window">
+	<md-content>
+		<md-list layout="column">
 			<md-subheader>Subheader/Room Name Placeholder</md-subheader>
-			<md-list-item class="md-2-line" ng-repeat="message in mainCtrl.allMessages track by $index">
+			<md-list-item class="md-2-line" id="chat-item-{{$index}}" ng-repeat="message in mainCtrl.allMessages track by $index">
 				<img ng-src="http://lorempixel.com/50/50/" class="md-avatar"></img>
 				<div class="md-list-item-text" layout="column">
 					<h3>user</h3>
@@ -12,11 +13,12 @@
 			</md-list-item>
 		</md-list>
 	</md-content>
+</div>
 
 <form ng-submit="mainCtrl.send()" layout="row">
 	<md-input-container flex="33">
 		<label>message</label>
-		<input ng-model="mainCtrl.message"/>		
+		<input ng-model="mainCtrl.message" autocomplete="off" id="form-input"/>
 	</md-input-container>
 	<md-button type="submit" class="md-raised md-primary">Send</md-button>
 </form>

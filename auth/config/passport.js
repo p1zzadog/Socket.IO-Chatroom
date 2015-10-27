@@ -1,30 +1,7 @@
 var bcrypt = require('bcryptjs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-
-// var User = require('../models/user.js');
-
-// TEMPORARY CODE, THIS WILL GO IN /MODELS/USERS.JS
-var mongoose = require('mongoose');
-var userSchema = mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  }
-});
-var User = mongoose.model('user', userSchema);
-// 
+var User = require('../models/user.js');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -53,8 +30,28 @@ localStrategy = new LocalStrategy(
   }
 );
 
+var ensureAuthenticated = function(req, res, next){
+  // If the current user is logged in...
+  if(req.isAuthenticated()){
+    // Middleware allows the execution chain to continue.
+    return res.send({success:"auth success"})
+  };
+  // If not, redirect to login
+  res.send({failure:"auth failure"});
+};
+
+var ensureAuthenticatedAjax = function(req, res, next){
+    // If the current user is logged in...
+  if(req.isAuthenticated()){
+    // Middleware allows the execution chain to continue.
+    return next();
+  };
+  // If not, redirect to login
+  res.send({failure:"auth failure"});
+}
+
 module.exports = {
-
-  localStrategy : localStrategy
-
+  ensureAuthenticated     : ensureAuthenticated,
+  ensureAuthenticatedAjax : ensureAuthenticatedAjax,
+	localStrategy           : localStrategy,
 }

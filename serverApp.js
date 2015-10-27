@@ -31,15 +31,16 @@ passportConfig = require('./auth/config/passport.js');
 passport.use(passportConfig.localStrategy);
 // 
 
-// this doesn't work with front-end routing, need to modify for AJAX
-app.post('/auth/login', 
-	passport.authenticate('local', { 
-		successRedirect :'/',
-		failureRedirect : '/login',
-		falureFlash     : true
-	})
-);
-app.use('/', routes);
+app.get('/', function(req, res){
+	res.sendFile('/html/index.html', {root: './public'})
+});
+app.post('/auth/process-login', passport.authenticate('local'), function(req, res){
+	res.send("authentication success");
+});
+app.get('/auth/ensure', passportConfig.ensureAuthenticated);
+app.get('/api/me', passportConfig.ensureAuthenticatedAjax, function(req, res){
+	res.send({user:req.user});
+});
 
 // server
 var port = 3000;
@@ -72,7 +73,7 @@ socketServer.on('connection', function(socket){
 		console.log(message);
 		allMessages.push(message);
 		socketServer.emit('server-send', allMessages);
-	})
+	});
 
 
 	socket.on('disconnect', function(){

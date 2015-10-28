@@ -9,13 +9,12 @@ angular.module('chatApp')
     		method : 'get',
      		url    : '/auth/ensure',
    		}).then(function(returnData){
-        	console.log(returnData)
         	if ( returnData.data.failure ) {
-        		console.log('auth failure');
+        		console.log(returnData.data.failure);
         		window.location.href="/#/auth/login"
         	}
         	else {
-      			console.log('auth success');
+      			console.log(returnData.data.success);
     		};
 		});
 
@@ -23,8 +22,12 @@ angular.module('chatApp')
 			method:'get',
 			url: '/api/me'
 		}).then(function(returnData){
-			chatCtrl.user = returnData.data
-			console.log('chatCtrl.user', chatCtrl.user);
+			if (returnData.data.user) {
+				chatCtrl.user = returnData.data
+			}
+			else {
+				window.location.href="/#/auth/login"
+			}
 		})
 
 		var socket = io();		

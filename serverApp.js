@@ -26,21 +26,13 @@ app.use(app.sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// TEMPORARY CODE
-passportConfig = require('./auth/config/passport.js');
-passport.use(passportConfig.localStrategy);
-// 
+// Routes
+app.use('/', routes);
+app.use('/auth/process-login', routes);
+app.use('/auth/process-signup', routes);
+app.use('/auth/ensure', routes);
+app.use('/api/me', routes);
 
-app.get('/', function(req, res){
-	res.sendFile('/html/index.html', {root: './public'})
-});
-app.post('/auth/process-login', passport.authenticate('local'), function(req, res){
-	res.send("authentication success");
-});
-app.get('/auth/ensure', passportConfig.ensureAuthenticated);
-app.get('/api/me', passportConfig.ensureAuthenticatedAjax, function(req, res){
-	res.send({user:req.user});
-});
 
 // server
 var port = 3000;
@@ -51,6 +43,10 @@ app.server = app.listen(port, function(){
 
 //set up socketServer, use http server object as argument 
 var socketServer = io(app.server);
+socketServer.use(function(socket, next){
+  if (socket.request.headers.cookie) return next();
+  next(new Error('Authentication error'));
+});
 
 // analogous to app.use(session({}))
 socketServer.use(function(socket, next){
@@ -70,7 +66,6 @@ socketServer.on('connection', function(socket){
 	socket.emit('server-send', allMessages);
 
 	socket.on('client-send', function(message){
-		console.log(message);
 		allMessages.push(message);
 		socketServer.emit('server-send', allMessages);
 	});

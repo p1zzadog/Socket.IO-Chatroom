@@ -30,28 +30,25 @@ localStrategy = new LocalStrategy(
   }
 );
 
-var ensureAuthenticated = function(req, res, next){
-  // If the current user is logged in...
+passport.use(localStrategy);
+
+var ensureAuth = function(req, res, next){
+
   if(req.isAuthenticated()){
-    // Middleware allows the execution chain to continue.
-    return res.send({success:"auth success"})
+    return next()
   };
-  // If not, redirect to login
-  res.send({failure:"auth failure"});
+  res.redirect('/#/auth/login');
 };
 
-var ensureAuthenticatedAjax = function(req, res, next){
-    // If the current user is logged in...
+var ensureAuthAjax = function(req, res, next){
+
   if(req.isAuthenticated()){
-    // Middleware allows the execution chain to continue.
     return next();
-  };
-  // If not, redirect to login
+  }; 
   res.send({failure:"auth failure"});
 }
 
 module.exports = {
-  ensureAuthenticated     : ensureAuthenticated,
-  ensureAuthenticatedAjax : ensureAuthenticatedAjax,
-	localStrategy           : localStrategy,
+  ensureAuth    : ensureAuth,
+  ensureAuthAjax : ensureAuthAjax,
 }

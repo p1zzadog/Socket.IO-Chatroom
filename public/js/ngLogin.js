@@ -16,9 +16,19 @@ angular.module('chatApp')
 				console.log(err);
 			});
 
-			return false;
 		};
 
+		loginCtrl.signup = function(){
+			$http({
+				method: 'post',
+				url: '/auth/process-signup', 
+				data: loginCtrl.signupForm
+			}).then(function(returnData){
+				if(returnData.data.success) window.location.href="/#/chat";			
+			}, function(err){
+				console.log(err);
+			});
+		};
 
 
 		

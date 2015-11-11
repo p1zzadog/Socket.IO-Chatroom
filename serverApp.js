@@ -62,18 +62,20 @@ var allMessages = [];
 // socketServer event handling
 // analogous to routing
 socketServer.on('connection', function(socket){
-	console.log('a user connected');
-	socket.emit('server-send', allMessages);
+	if ( socket.request.session && socket.request.session.passport && socket.request.session.passport.user ) {
+		console.log(socket.request.session.passport.user + ' connected');
+		socket.emit('server-send', allMessages);
 
-	socket.on('client-send', function(message){
-		allMessages.push(message);
-		socketServer.emit('server-send', allMessages);
-	});
+		socket.on('client-send', function(message){
+			allMessages.push(message);
+			socketServer.emit('server-send', allMessages);
+		});
 
 
-	socket.on('disconnect', function(){
-		console.log('user disconnected');
-	});
+		socket.on('disconnect', function(){
+			console.log('user disconnected');
+		});
+	};
 });
 
 
